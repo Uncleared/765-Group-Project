@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9c27261dcc9b2684baf811ff2d0e1a84, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,7 +110,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7a1f64eeabae5468a847b760514eb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerMask:
+  foodLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
-  foodDetectRadius: 3
+    m_Bits: 64
+  agentLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  foodDetectRadius: 9
+  foodDot: 0
+  currentFoodDirection: {x: 0, y: 0, z: 0}

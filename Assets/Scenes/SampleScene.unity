@@ -556,18 +556,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Agent
       objectReference: {fileID: 0}
-    - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
-      propertyPath: foodDetectRadius
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
-      propertyPath: layerMask.m_Bits
-      value: 118
-      objectReference: {fileID: 0}
-    - target: {fileID: 1324469636428336614, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 9c27261dcc9b2684baf811ff2d0e1a84, type: 2}
     - target: {fileID: 1324469636428336616, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: m_RootOrder
       value: 3
