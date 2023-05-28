@@ -1,2 +1,2 @@
-# 765 Group-Project
+# 765 Group Project
  
