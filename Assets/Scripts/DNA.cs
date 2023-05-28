@@ -7,4 +7,14 @@ public class DNA : MonoBehaviour
     public float g;
     public float b;
 
+    public void Start() {
+        print("hellpo");
+    }
+
+
+    void Update() {
+        if(Input.GetKeyDown(KeyCode.F)) {
+            Destroy(gameObject);
+        }
+    }
 }
