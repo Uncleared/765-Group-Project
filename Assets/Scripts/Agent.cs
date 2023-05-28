@@ -96,6 +96,15 @@ public class Agent : MonoBehaviour
         return dot/2f + 0.5f;
     }
 
+    public float DetectAgentValue(LayerMask layerMask)
+    {
+        currentFoodDirection = DetectAgentDirection(layerMask);
+        float dot = Vector3.Dot(transform.right, currentFoodDirection.normalized);
+
+        return dot / 2f + 0.5f;
+    }
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -111,9 +120,9 @@ public class Agent : MonoBehaviour
             foodDot = DetectFoodValue(foodLayerMask);
         }
 
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    foodDot = DetectFoodValue(agentLayerMask);
-        //}
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            foodDot = DetectAgentValue(agentLayerMask);
+        }
     }
 }
