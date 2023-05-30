@@ -113,9 +113,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
   survivalTime: 0
-  hungerRate: 10
+  hungerRate: 7
   speed: 5
-  bounds: 30
+  bounds: 40
   eatMagnitude: 0.5
   foodLayerMask:
     serializedVersion: 2
@@ -128,6 +128,7 @@ MonoBehaviour:
   health: 100
   foodDot: 0
   agentRequiredDistance: 5
+  wrapAround: 1
   currentFoodDirection: {x: 0, y: 0, z: 0}
 --- !u!1 &8266521811693652669
 GameObject:

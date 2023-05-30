@@ -235,13 +235,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d7405baf3fee6845a2136ff444d2b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounds: 30
-  populationSize: 10
+  bounds: 40
+  populationSize: 15
   creaturePrefab: {fileID: 1324469636428336611, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
   population: []
-  populationLifetime: 60
-  mutationRate: 0.2
+  populationLifetime: 300
+  mutationRate: 0.1
   generationText: {fileID: 1995958054}
+  maxSurvivalText: {fileID: 494298535}
   mapSpawner: {fileID: 543953830}
   died: 0
 --- !u!1 &494298533
@@ -279,8 +280,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -82.4}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 209.57231, y: -82.399994}
+  m_SizeDelta: {x: 419.1447, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &494298535
 MonoBehaviour:
@@ -470,7 +471,7 @@ Transform:
   m_GameObject: {fileID: 519933800}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1.04, z: 0}
-  m_LocalScale: {x: 60, y: 1, z: 60}
+  m_LocalScale: {x: 80, y: 1, z: 80}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -505,12 +506,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93c1816085f05d4fbe1d5c0bd015f26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  proportion: 0.3
+  proportion: 0.4
   numberOfFood: 30
   foodPrefab: {fileID: 5778143839774152021, guid: e034376ccebc5904d8086885f0785317, type: 3}
   xRange: 30
   zRange: 30
-  interval: 1.5
+  interval: 1
   timer: 0
 --- !u!4 &543953831
 Transform:
@@ -842,8 +843,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -25}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 209.57231, y: -25}
+  m_SizeDelta: {x: 419.1447, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1995958054
 MonoBehaviour:

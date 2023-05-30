@@ -29,6 +29,8 @@ public class Agent : MonoBehaviour
     Vector3 velocity;
 
     MeshRenderer meshRenderer;
+
+    public bool wrapAround = true;
     public void DetectDirection()
     {
 
@@ -117,10 +119,10 @@ public class Agent : MonoBehaviour
             {
                 // Do a dot product check
                 Vector3 delta = hitCollider.transform.position - transform.position;
-                if(Vector3.Dot(delta.normalized, transform.forward) > 0f)
-                {
+                //if(Vector3.Dot(delta.normalized, transform.forward) > 0f)
+                //{
                     validDirections.Add(delta);
-                }
+                //}
             }
         }
 
@@ -212,17 +214,33 @@ public class Agent : MonoBehaviour
         float finalHungerRate = hungerRate;
         if (closeAgents == 3)
         {
-            finalHungerRate *= 0.5f;
+            finalHungerRate *= 0.25f;
         }
         else if (closeAgents == 2)
         {
-            finalHungerRate *= 0.6f;
+            finalHungerRate *= 0.5f;
 
         }
         else if (closeAgents == 1)
         {
             finalHungerRate *= 0.7f;
         }
+
+        // OPPOSITE RULE
+        //if (closeAgents <= 1)
+        //{
+        //    finalHungerRate *= 0.25f;
+        //}
+        //else if (closeAgents == 2)
+        //{
+        //    finalHungerRate *= 1.5f;
+
+        //}
+        //else if (closeAgents == 3)
+        //{
+        //    finalHungerRate *= 2f;
+        //}
+
         //if(closeAgents > 0f)
         //{
         //    finalHungerRate = 0f;
@@ -239,30 +257,34 @@ public class Agent : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        bool reachedXBound = transform.position.x < -bounds || transform.position.x > bounds;
-        bool reachedZBound = transform.position.z < -bounds || transform.position.z > bounds;
-        // Check bounds
-        if (reachedXBound)
+        if (wrapAround)
         {
-            if(transform.position.x < -bounds)
-            {
-                transform.position = new Vector3(bounds, transform.position.y, transform.position.z);
-            }
-            else
-            {
-                transform.position = new Vector3(-bounds, transform.position.y, transform.position.z);
-            }
-        }
 
-        if (reachedZBound)
-        {
-            if (transform.position.z < -bounds)
+            bool reachedXBound = transform.position.x < -bounds || transform.position.x > bounds;
+            bool reachedZBound = transform.position.z < -bounds || transform.position.z > bounds;
+            // Check bounds
+            if (reachedXBound)
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y, bounds);
+                if (transform.position.x < -bounds)
+                {
+                    transform.position = new Vector3(bounds, transform.position.y, transform.position.z);
+                }
+                else
+                {
+                    transform.position = new Vector3(-bounds, transform.position.y, transform.position.z);
+                }
             }
-            else
+
+            if (reachedZBound)
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y, -bounds);
+                if (transform.position.z < -bounds)
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y, bounds);
+                }
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y, -bounds);
+                }
             }
         }
         Evaluate();
