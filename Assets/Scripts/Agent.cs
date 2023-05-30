@@ -88,7 +88,7 @@ public class Agent : MonoBehaviour
         return foodDirection;
     }
 
-    public float DetectFoodValue(LayerMask layerMask)
+    public float DetectFoodValue()
     {
         currentFoodDirection = DetectFoodDirection();
         float dot = Vector3.Dot(transform.right, currentFoodDirection.normalized);
@@ -105,6 +105,16 @@ public class Agent : MonoBehaviour
     }
 
 
+    public void SeekFood()
+    {
+
+    }
+
+    public void SeekAgent()
+    {
+
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -117,7 +127,7 @@ public class Agent : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            foodDot = DetectFoodValue(foodLayerMask);
+            foodDot = DetectFoodValue();
         }
 
         if (Input.GetKeyDown(KeyCode.A))
