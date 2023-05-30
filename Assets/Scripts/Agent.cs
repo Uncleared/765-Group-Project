@@ -19,6 +19,7 @@ public class Agent : MonoBehaviour
     public float health = 100f;
 
     public float foodDot = 0f;
+    public float agentRequiredDistance = 5f;
 
     Vector3 velocity;
 
@@ -80,6 +81,14 @@ public class Agent : MonoBehaviour
         return foodDirection.normalized;
     }
 
+    public int GetCloseAgents()
+    {
+        Vector3 foodDirection = Vector3.zero;
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, agentRequiredDistance, agentLayerMask);
+
+      
+        return hitColliders.Length;
+    }
 
     public Vector3 DetectAgentDirection()
     {
@@ -183,9 +192,24 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        int closeAgents = GetCloseAgents();
+        float finalHungerRate = hungerRate;
+        if(closeAgents == 3)
+        {
+            finalHungerRate *= 0.5f;
+        }
+        else if(closeAgents == 2)
+        {
+            finalHungerRate *= 0.6f;
+
+        }
+        else if(closeAgents == 1)
+        {
+            finalHungerRate *= 0.7f;
+        }
         // Check if close enough to agent
         // If so, then hunger rate depletes slower
-        health -= Time.deltaTime * hungerRate;
+        health -= Time.deltaTime * finalHungerRate;
 
         // Color the agent appropriately
         meshRenderer.material.color = new Color(health/100f, health/100f, health/100f);
