@@ -597,7 +597,7 @@ MonoBehaviour:
   foodPrefab: {fileID: 5778143839774152021, guid: e034376ccebc5904d8086885f0785317, type: 3}
   xRange: 30
   zRange: 30
-  interval: 2
+  interval: 1.5
   timer: 0
 --- !u!4 &543953831
 Transform:

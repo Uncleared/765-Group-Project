@@ -41,7 +41,7 @@ public class MapSpawner : MonoBehaviour
             GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
             GameObject[] food = GameObject.FindGameObjectsWithTag("Food");
 
-            int required = (int)(agents.Length * proportion);
+            int required = Mathf.CeilToInt(agents.Length * proportion);
             if(food.Length < required)
             {
                 for(int i = 0; i < required - food.Length; i++)
