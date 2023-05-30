@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
+    bool followFood = false;
     public float speed = 3f;
     public float bounds = 30f;
     public float eatMagnitude = 0.5f;
     public LayerMask foodLayerMask;
     public LayerMask agentLayerMask;
     public float foodDetectRadius = 3f;
+    public float agentDetectRadius = 12f;
 
     public float foodDot = 0f;
 
@@ -69,7 +71,7 @@ public class Agent : MonoBehaviour
     public Vector3 DetectAgentDirection()
     {
         Vector3 foodDirection = Vector3.zero;
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, this.foodDetectRadius, agentLayerMask);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, this.agentDetectRadius, agentLayerMask);
 
         List<Vector3> validDirections = new List<Vector3>();
         foreach (var hitCollider in hitColliders)
@@ -127,9 +129,9 @@ public class Agent : MonoBehaviour
     public void SeekAgent()
     {
         Vector3 agentVelocity = DetectAgentDirection();
-        if(velocity.magnitude > 0.05f)
+        if(agentVelocity.magnitude > 0.05f)
         {
-
+            velocity = agentVelocity;
         }
     }
 
@@ -137,6 +139,10 @@ public class Agent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(Random.value > 0.5f)
+        {
+            followFood = true;
+        }
         //DetectFood();
     }
 
@@ -179,11 +185,18 @@ public class Agent : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, transform.position.y, -bounds);
             }
         }
-        SeekFood();
+        if(followFood)
+        {
+            SeekFood();
+        }
+        else
+        {
+            SeekAgent();
+        }
 
         if(velocity.magnitude > 0.03f)
         {
-            transform.rotation = Quaternion.LookRotation(velocity);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(velocity), Time.deltaTime * 2f);
         }
   
         transform.position += transform.forward * speed * Time.deltaTime;

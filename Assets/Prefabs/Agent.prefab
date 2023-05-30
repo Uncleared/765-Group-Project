@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1324469636428336614}
   - component: {fileID: 1324469636428336613}
   - component: {fileID: 1324469636428336612}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7a1f64eeabae5468a847b760514eb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 5
   bounds: 30
   eatMagnitude: 0.5
   foodLayerMask:
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 3845903840697825528}
   - component: {fileID: 2286279210043379388}
   - component: {fileID: 5028072017722008036}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
