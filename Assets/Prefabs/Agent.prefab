@@ -111,6 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7a1f64eeabae5468a847b760514eb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 3
+  bounds: 30
+  eatMagnitude: 0.5
   foodLayerMask:
     serializedVersion: 2
     m_Bits: 64
