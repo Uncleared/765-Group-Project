@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Agent : MonoBehaviour
@@ -85,9 +86,18 @@ public class Agent : MonoBehaviour
     {
         Vector3 foodDirection = Vector3.zero;
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, agentRequiredDistance, agentLayerMask);
+        List<Collider> colliderList = hitColliders.ToList();
 
-      
-        return hitColliders.Length;
+        int count = 0;
+        colliderList.ForEach(x =>
+        {
+            if(x.gameObject != gameObject)
+            {
+                count++;
+            }
+        });
+        
+        return count;
     }
 
     public Vector3 DetectAgentDirection()
@@ -194,19 +204,23 @@ public class Agent : MonoBehaviour
     {
         int closeAgents = GetCloseAgents();
         float finalHungerRate = hungerRate;
-        if(closeAgents == 3)
+        if (closeAgents == 3)
         {
             finalHungerRate *= 0.5f;
         }
-        else if(closeAgents == 2)
+        else if (closeAgents == 2)
         {
             finalHungerRate *= 0.6f;
 
         }
-        else if(closeAgents == 1)
+        else if (closeAgents == 1)
         {
             finalHungerRate *= 0.7f;
         }
+        //if(closeAgents > 0f)
+        //{
+        //    finalHungerRate = 0f;
+        //}
         // Check if close enough to agent
         // If so, then hunger rate depletes slower
         health -= Time.deltaTime * finalHungerRate;
