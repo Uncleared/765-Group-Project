@@ -19,6 +19,14 @@ public class GenerationController : MonoBehaviour
 
     public MapSpawner mapSpawner;
 
+    float timer = 0f;
+
+    public int died = 0;
+
+    public void RegisterDead()
+    {
+        died++;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +34,6 @@ public class GenerationController : MonoBehaviour
         InitialisePopulation();
 
         // For each population Lifetime, breed a new generation, this will repeat indefinitely
-        InvokeRepeating("BreedPopulation", populationLifetime, populationLifetime);
 
         // Set the value so we can show a countdown for each population
         lifetimeLeft = populationLifetime;
@@ -40,6 +47,13 @@ public class GenerationController : MonoBehaviour
 
         // Perform a countdown, showing the lifetime of the current population, reset on breeding
         lifetimeLeft -= Time.deltaTime;
+
+        timer -= Time.deltaTime;
+        if(timer <= 0f || died == populationSize - 1)
+        {
+            timer = populationLifetime;
+            BreedPopulation();
+        }
     }
 
     /**
@@ -55,6 +69,7 @@ public class GenerationController : MonoBehaviour
             // Instantiate a new creature
             GameObject creature = Instantiate(creaturePrefab, pos, Quaternion.identity);
             Agent agent = creature.GetComponent<Agent>();
+            agent.controller = this;
             agent.bounds = bounds;
 
             // Add the creature to the population
@@ -64,6 +79,7 @@ public class GenerationController : MonoBehaviour
 
     private void BreedPopulation()
     {
+        died = 0;
         mapSpawner.Reset(populationSize);
         List<GameObject> newPopulation = new List<GameObject>();
 
@@ -100,6 +116,7 @@ public class GenerationController : MonoBehaviour
         // Create a new creature and get a reference to its DNA
         GameObject offspring = Instantiate(creaturePrefab, pos, Quaternion.identity);
         Agent offspringAgent = offspring.GetComponent<Agent>();
+        offspringAgent.controller = this;
 
         // Get the parents DNA
         Agent agent1 = parent1.GetComponent<Agent>();

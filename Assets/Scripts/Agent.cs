@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
+    public GenerationController controller;
+
     public float survivalTime = 0f;
 
     public float hungerRate;
@@ -233,6 +235,7 @@ public class Agent : MonoBehaviour
         meshRenderer.material.color = new Color(health/100f, health/100f, health/100f);
         if(health < 0f)
         {
+            controller.RegisterDead();
             gameObject.SetActive(false);
         }
 
