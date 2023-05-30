@@ -132,13 +132,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 95659903}
+  - component: {fileID: 95659904}
   m_Layer: 0
   m_Name: GenerationController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &95659903
 Transform:
   m_ObjectHideFlags: 0
@@ -154,6 +155,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &95659904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95659902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d7405baf3fee6845a2136ff444d2b37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  populationSize: 50
+  creaturePrefab: {fileID: 0}
+  population: []
+  populationLifetime: 5
+  mutationRate: 0
+  generationText: {fileID: 0}
+  timeText: {fileID: 0}
 --- !u!1001 &382354525
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -167,10 +187,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336611, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
+      propertyPath: hungerRate
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336616, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
@@ -458,10 +482,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336611, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
+      propertyPath: hungerRate
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336616, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
@@ -523,10 +551,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336611, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
+      propertyPath: hungerRate
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336616, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
@@ -588,10 +620,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336611, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
+      propertyPath: hungerRate
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336616, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
@@ -697,7 +733,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336611, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1324469636428336612, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
+      propertyPath: hungerRate
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1324469636428336616, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
       propertyPath: m_RootOrder

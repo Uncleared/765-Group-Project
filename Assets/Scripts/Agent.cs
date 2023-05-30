@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
+    public float hungerRate;
+    public NeuralNet net;
+
     bool followFood = false;
     public float speed = 3f;
     public float bounds = 30f;
@@ -13,9 +16,13 @@ public class Agent : MonoBehaviour
     public float foodDetectRadius = 3f;
     public float agentDetectRadius = 12f;
 
+    public float health = 100f;
+
     public float foodDot = 0f;
 
     Vector3 velocity;
+
+    MeshRenderer meshRenderer;
     public void DetectDirection()
     {
 
@@ -44,8 +51,14 @@ public class Agent : MonoBehaviour
                 // Do a dot product check
                 Vector3 delta = hitCollider.transform.position - transform.position;
 
+                // For eating
                 if(delta.magnitude < eatMagnitude)
                 {
+                    health += 50f;
+                    if(health > 100f)
+                    {
+                        health = 100f;
+                    }
                     Destroy(hitCollider.gameObject);
                 }
                 if (Vector3.Dot(delta.normalized, transform.forward) > 0f)
@@ -60,10 +73,10 @@ public class Agent : MonoBehaviour
             foodDirection = displacements[0];
         }
 
-        foreach(Vector3 d in displacements)
-        {
-            print(d.magnitude);
-        }
+        //foreach(Vector3 d in displacements)
+        //{
+        //    print(d.magnitude);
+        //}
         return foodDirection.normalized;
     }
 
@@ -108,7 +121,7 @@ public class Agent : MonoBehaviour
         return dot/2f + 0.5f;
     }
 
-    public float DetectAgentValue(LayerMask layerMask)
+    public float DetectAgentValue()
     {
         currentFoodDirection = DetectAgentDirection();
         float dot = Vector3.Dot(transform.right, currentFoodDirection.normalized);
@@ -119,44 +132,66 @@ public class Agent : MonoBehaviour
 
     public void SeekFood()
     {
-        Vector3 foodVelocity = DetectFoodDirection();
-        if(foodVelocity.magnitude > 0.05f)
-        {
-            velocity = foodVelocity;
-        }
+     
     }
 
     public void SeekAgent()
     {
-        Vector3 agentVelocity = DetectAgentDirection();
-        if(agentVelocity.magnitude > 0.05f)
-        {
-            velocity = agentVelocity;
-        }
+       
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
+        meshRenderer = GetComponent<MeshRenderer>();
         if(Random.value > 0.5f)
         {
             followFood = true;
         }
+        net = new NeuralNet(3, 5, 1);
         //DetectFood();
     }
 
+    void Evaluate()
+    {
+        float foodValue = DetectFoodValue();
+        float agentValue = DetectAgentValue();
+        double decision = net.Compute(foodValue, agentValue, health/10f)[0];
+        Vector3 foodVelocity = DetectFoodDirection();
+        Vector3 agentVelocity = DetectAgentDirection();
+
+        bool seesFood = foodVelocity.magnitude > 0.05f;
+        bool seesAgent = agentVelocity.magnitude > 0.05f;
+
+        if(seesAgent && seesFood)
+        {
+            velocity = Vector3.Lerp(foodVelocity, agentVelocity, (float)decision);
+        }
+        else
+        {
+            if (seesFood)
+            {
+                velocity = foodVelocity;
+            }
+            if (seesAgent)
+            {
+                velocity = agentVelocity;
+            }
+        }
+    }
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            foodDot = DetectFoodValue();
-        }
+        // Check if close enough to agent
+        // If so, then hunger rate depletes slower
+        health -= Time.deltaTime * hungerRate;
 
-        if (Input.GetKeyDown(KeyCode.A))
+        // Color the agent appropriately
+        meshRenderer.material.color = new Color(health/100f, health/100f, health/100f);
+        if(health < 0f)
         {
-            foodDot = DetectAgentValue(agentLayerMask);
+            Destroy(gameObject);
         }
 
         bool reachedXBound = transform.position.x < -bounds || transform.position.x > bounds;
@@ -185,14 +220,7 @@ public class Agent : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, transform.position.y, -bounds);
             }
         }
-        if(followFood)
-        {
-            SeekFood();
-        }
-        else
-        {
-            SeekAgent();
-        }
+        Evaluate();
 
         if(velocity.magnitude > 0.03f)
         {
