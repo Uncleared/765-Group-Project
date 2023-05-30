@@ -11,7 +11,7 @@ public class GenerationController : MonoBehaviour
     public GameObject creaturePrefab;
     public List<GameObject> population;
     public float populationLifetime = 5.0f;
-    public int mutationRate; // Chance of a mutation occuring, 0 - 100%
+    public float mutationRate; // Chance of a mutation occuring, 0 - 100%
 
     public TextMeshProUGUI generationText;
     private int currentGeneration = 1;
@@ -96,47 +96,74 @@ public class GenerationController : MonoBehaviour
 
         // Create a new creature and get a reference to its DNA
         GameObject offspring = Instantiate(creaturePrefab, pos, Quaternion.identity);
-        Agent offspringDNA = offspring.GetComponent<Agent>();
+        Agent offspringAgent = offspring.GetComponent<Agent>();
 
         // Get the parents DNA
-        Agent dna1 = parent1.GetComponent<Agent>();
-        Agent dna2 = parent2.GetComponent<Agent>();
+        Agent agent1 = parent1.GetComponent<Agent>();
+        Agent agent2 = parent2.GetComponent<Agent>();
 
         // MIX the two neural nets together
+        NeuralNet neuralNet = new NeuralNet(agent1.net.InputLayer.Count, agent1.net.HiddenLayers.Count, agent1.net.OutputLayer.Count);
 
         // Get a mix of the parents DNA majority of the time, dependant on mutation chance
-        if (mutationRate <= Random.Range(0, 100))
+        if (Random.value < mutationRate)
         {
             // Pick a range between 0 - 10, if it's less than 5 then pick parent1's DNA, otherwise pick parent 2's
-            offspringDNA.r = Random.Range(0, 10) < 5 ? dna1.r : dna2.r;
-            offspringDNA.g = Random.Range(0, 10) < 5 ? dna1.g : dna2.g;
-            offspringDNA.b = Random.Range(0, 10) < 5 ? dna1.b : dna2.b;
+            offspringAgent.r = Random.Range(0, 10) < 5 ? agent1.r : agent2.r;
+            offspringAgent.g = Random.Range(0, 10) < 5 ? agent1.g : agent2.g;
+            offspringAgent.b = Random.Range(0, 10) < 5 ? agent1.b : agent2.b;
         }
         else
         {
-            int random = Random.Range(0, 3);
-            if (random == 0)
+            // Breed the weights
+            for(int i = 0; i < agent1.net.InputLayer.Count; i++)
             {
-                offspringDNA.r = Random.Range(0.0f, 1.0f);
-                offspringDNA.g = Random.Range(0, 10) < 5 ? dna1.g : dna2.g;
-                offspringDNA.b = Random.Range(0, 10) < 5 ? dna1.b : dna2.b;
+                Neuron neuron = agent1.net.InputLayer[i];
+                for(int j = 0; j < neuron.InputSynapses.Count; j++)
+                {
+
+                }
+
+                for (int j = 0; j < neuron.OutputSynapses.Count; j++)
+                {
+
+                }
             }
-            else if (random == 1)
+            
+            for(int i = 0; i < agent1.net.HiddenLayers.Count; i++)
             {
-                offspringDNA.r = Random.Range(0, 10) < 5 ? dna1.r : dna2.r;
-                offspringDNA.g = Random.Range(0.0f, 1.0f);
-                offspringDNA.b = Random.Range(0, 10) < 5 ? dna1.b : dna2.b;
+                List<Neuron> layer = agent1.net.HiddenLayers[i];
+                for(int j = 0; j < layer.Count; j++)
+                {
+                    Neuron neuron = layer[j];
+                    for(int k = 0; k < neuron.InputSynapses.Count; k++)
+                    {
+
+                    }
+                    for (int k = 0; k < neuron.OutputSynapses.Count; k++)
+                    {
+
+                    }
+                }
             }
-            else
+
+            for (int i = 0; i < agent1.net.OutputLayer.Count; i++)
             {
-                offspringDNA.r = Random.Range(0, 10) < 5 ? dna1.r : dna2.r;
-                offspringDNA.g = Random.Range(0, 10) < 5 ? dna1.g : dna2.g;
-                offspringDNA.b = Random.Range(0.0f, 1.0f);
+                Neuron neuron = agent1.net.OutputLayer[i];
+                for (int j = 0; j < neuron.InputSynapses.Count; j++)
+                {
+
+                }
+
+                for (int j = 0; j < neuron.OutputSynapses.Count; j++)
+                {
+
+                }
             }
         }
 
         // Assign the breeded neural net
-        offspring.GetComponent<Agent>().material.color = new Color(offspringDNA.r, offspringDNA.g, offspringDNA.b);
+        offspring.GetComponent<Agent>().material.color = new Color(offspringAgent.r, offspringAgent.g, offspringAgent.b);
 
         return offspring;
     }
