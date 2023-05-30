@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.IO;
 
 public class GenerationController : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class GenerationController : MonoBehaviour
     public float mutationRate; // Chance of a mutation occuring, 0 - 100%
 
     public TextMeshProUGUI generationText;
+    public TextMeshProUGUI maxSurvivalText;
     private int currentGeneration = 1;
     private float lifetimeLeft;
 
@@ -77,8 +79,11 @@ public class GenerationController : MonoBehaviour
         }
     }
 
+    float maxSurvivalTime = 0f;
     private void BreedPopulation()
     {
+     
+
         died = 0;
         mapSpawner.Reset(populationSize);
         List<GameObject> newPopulation = new List<GameObject>();
@@ -86,6 +91,27 @@ public class GenerationController : MonoBehaviour
         // Remove unfit individuals, by sorting the list by the longest surviving creatures
         List<GameObject> sortedList = population.OrderByDescending(o => o.GetComponent<Agent>().survivalTime).ToList();
 
+        // Write to spreadsheet
+        // The target file path e.g.
+        var folder = Application.streamingAssetsPath;
+
+        if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+
+
+        var filePath = Path.Combine(folder, "generationData.csv");
+
+        using (var writer = new StreamWriter(filePath, true))
+        {
+            writer.Write("\n" + currentGeneration + "," + sortedList[0].GetComponent<Agent>().survivalTime);
+        }
+        print(filePath);
+
+        if (sortedList[0].GetComponent<Agent>().survivalTime > maxSurvivalTime)
+        {
+            maxSurvivalTime = sortedList[0].GetComponent<Agent>().survivalTime;
+        }
+        maxSurvivalText.text = "Max Survival Time: " + maxSurvivalTime;
+        
         population.Clear();
 
         // then breeding only the most red creatures

@@ -111,7 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7a1f64eeabae5468a847b760514eb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hungerRate: 5
+  controller: {fileID: 0}
+  survivalTime: 0
+  hungerRate: 10
   speed: 5
   bounds: 30
   eatMagnitude: 0.5
