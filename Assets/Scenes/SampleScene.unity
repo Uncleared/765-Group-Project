@@ -235,11 +235,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d7405baf3fee6845a2136ff444d2b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bounds: 30
   populationSize: 10
   creaturePrefab: {fileID: 1324469636428336611, guid: d04ba4030d7f11d439386ad6691329d7, type: 3}
   population: []
   populationLifetime: 5
-  mutationRate: 0
+  mutationRate: 0.2
   generationText: {fileID: 1995958054}
 --- !u!1 &519933800
 GameObject:
@@ -254,7 +255,7 @@ GameObject:
   - component: {fileID: 519933802}
   - component: {fileID: 519933801}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

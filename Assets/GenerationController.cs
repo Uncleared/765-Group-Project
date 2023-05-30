@@ -17,6 +17,8 @@ public class GenerationController : MonoBehaviour
     private int currentGeneration = 1;
     private float lifetimeLeft;
 
+    public MapSpawner mapSpawner;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +64,7 @@ public class GenerationController : MonoBehaviour
 
     private void BreedPopulation()
     {
+        mapSpawner.Reset(populationSize);
         List<GameObject> newPopulation = new List<GameObject>();
 
         // Remove unfit individuals, by sorting the list by the longest surviving creatures
@@ -103,67 +106,107 @@ public class GenerationController : MonoBehaviour
         Agent agent2 = parent2.GetComponent<Agent>();
 
         // MIX the two neural nets together
-        NeuralNet neuralNet = new NeuralNet(agent1.net.InputLayer.Count, agent1.net.HiddenLayers.Count, agent1.net.OutputLayer.Count);
+        NeuralNet childNet = new NeuralNet(agent1.net.InputLayer.Count, agent1.net.HiddenLayers.Count, agent1.net.OutputLayer.Count);
+        childNet.InputLayer = new List<Neuron>(agent1.net.InputLayer);
+        childNet.HiddenLayers = new List<List<Neuron>>(agent1.net.HiddenLayers);
+        childNet.OutputLayer = new List<Neuron>(agent1.net.OutputLayer);
 
         // Get a mix of the parents DNA majority of the time, dependant on mutation chance
-        if (Random.value < mutationRate)
+        // Breed the weights
+        for(int i = 0; i < agent1.net.InputLayer.Count; i++)
         {
-            // Pick a range between 0 - 10, if it's less than 5 then pick parent1's DNA, otherwise pick parent 2's
-            offspringAgent.r = Random.Range(0, 10) < 5 ? agent1.r : agent2.r;
-            offspringAgent.g = Random.Range(0, 10) < 5 ? agent1.g : agent2.g;
-            offspringAgent.b = Random.Range(0, 10) < 5 ? agent1.b : agent2.b;
+            Neuron neuron = agent1.net.InputLayer[i];
+            for(int j = 0; j < neuron.InputSynapses.Count; j++)
+            {
+                // Decide between the two parents
+                if(Random.value > 0.5f)
+                {
+                    childNet.InputLayer[i].InputSynapses[j].Weight = Random.value > mutationRate ? neuron.InputSynapses[j].Weight : Random.value;
+                }
+                else
+                {
+                    childNet.InputLayer[i].InputSynapses[j].Weight = Random.value > mutationRate ? agent2.net.InputLayer[i].InputSynapses[j].Weight : Random.value;
+                }
+            }
+
+            for (int j = 0; j < neuron.OutputSynapses.Count; j++)
+            {
+                // Decide between the two parents
+                if (Random.value > 0.5f)
+                {
+                    childNet.InputLayer[i].OutputSynapses[j].Weight = Random.value > mutationRate ?  neuron.OutputSynapses[j].Weight : Random.value;
+                }
+                else
+                {
+                    childNet.InputLayer[i].OutputSynapses[j].Weight = Random.value > mutationRate ? agent2.net.InputLayer[i].OutputSynapses[j].Weight : Random.value;
+                }
+            }
         }
-        else
-        {
-            // Breed the weights
-            for(int i = 0; i < agent1.net.InputLayer.Count; i++)
-            {
-                Neuron neuron = agent1.net.InputLayer[i];
-                for(int j = 0; j < neuron.InputSynapses.Count; j++)
-                {
-
-                }
-
-                for (int j = 0; j < neuron.OutputSynapses.Count; j++)
-                {
-
-                }
-            }
             
-            for(int i = 0; i < agent1.net.HiddenLayers.Count; i++)
+        for(int i = 0; i < agent1.net.HiddenLayers.Count; i++)
+        {
+            List<Neuron> layer = agent1.net.HiddenLayers[i];
+            for(int j = 0; j < layer.Count; j++)
             {
-                List<Neuron> layer = agent1.net.HiddenLayers[i];
-                for(int j = 0; j < layer.Count; j++)
+                Neuron neuron = layer[j];
+                for(int k = 0; k < neuron.InputSynapses.Count; k++)
                 {
-                    Neuron neuron = layer[j];
-                    for(int k = 0; k < neuron.InputSynapses.Count; k++)
+                    // Decide between the two parents
+                    if (Random.value > 0.5f)
                     {
-
+                        childNet.HiddenLayers[i][j].InputSynapses[k].Weight = Random.value > mutationRate ? neuron.InputSynapses[k].Weight : Random.value;
                     }
-                    for (int k = 0; k < neuron.OutputSynapses.Count; k++)
+                    else
                     {
-
+                        childNet.HiddenLayers[i][j].InputSynapses[k].Weight = Random.value > mutationRate ? agent2.net.HiddenLayers[i][j].InputSynapses[k].Weight : Random.value;
+                    }
+                }
+                for (int k = 0; k < neuron.OutputSynapses.Count; k++)
+                {
+                    // Decide between the two parents
+                    if (Random.value > 0.5f)
+                    {
+                        childNet.HiddenLayers[i][j].OutputSynapses[k].Weight = Random.value > mutationRate ? neuron.OutputSynapses[k].Weight: Random.value;
+                    }
+                    else
+                    {
+                        childNet.HiddenLayers[i][j].OutputSynapses[k].Weight = Random.value > mutationRate ? agent2.net.HiddenLayers[i][j].OutputSynapses[k].Weight : Random.value;
                     }
                 }
             }
+        }
 
-            for (int i = 0; i < agent1.net.OutputLayer.Count; i++)
+        for (int i = 0; i < agent1.net.OutputLayer.Count; i++)
+        {
+            Neuron neuron = agent1.net.OutputLayer[i];
+            for (int j = 0; j < neuron.InputSynapses.Count; j++)
             {
-                Neuron neuron = agent1.net.OutputLayer[i];
-                for (int j = 0; j < neuron.InputSynapses.Count; j++)
+                // Decide between the two parents
+                if (Random.value > 0.5f)
                 {
-
+                    childNet.OutputLayer[i].InputSynapses[j].Weight = Random.value > mutationRate ? neuron.InputSynapses[j].Weight : Random.value;
                 }
-
-                for (int j = 0; j < neuron.OutputSynapses.Count; j++)
+                else
                 {
+                    childNet.OutputLayer[i].InputSynapses[j].Weight = Random.value > mutationRate ? agent2.net.OutputLayer[i].InputSynapses[j].Weight : Random.value;
+                }
+            }
 
+            for (int j = 0; j < neuron.OutputSynapses.Count; j++)
+            {
+                if (Random.value > 0.5f)
+                {
+                    childNet.OutputLayer[i].OutputSynapses[j].Weight = Random.value > mutationRate ? neuron.OutputSynapses[j].Weight : Random.value;
+                }
+                else
+                {
+                    childNet.OutputLayer[i].OutputSynapses[j].Weight = Random.value > mutationRate ? agent2.net.OutputLayer[i].OutputSynapses[j].Weight : Random.value;
                 }
             }
         }
 
         // Assign the breeded neural net
-        offspring.GetComponent<Agent>().material.color = new Color(offspringAgent.r, offspringAgent.g, offspringAgent.b);
+        offspring.GetComponent<Agent>().net = childNet;
 
         return offspring;
     }

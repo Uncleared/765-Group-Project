@@ -13,6 +13,23 @@ public class MapSpawner : MonoBehaviour
 
     public float interval = 2f;
     public float timer = 0f;
+
+    public void Reset(int populationSize)
+    {
+        timer = interval;
+        GameObject[] food = GameObject.FindGameObjectsWithTag("Food");
+        foreach(GameObject f in food)
+        {
+            Destroy(f);
+        }
+
+        for (int i = 0; i < Mathf.Ceil(proportion * populationSize); i++)
+        {
+            SpawnFood();
+        }
+
+
+    }
     public void SpawnFood()
     {
         Vector3 spawnPosition = new Vector3(Random.Range(-xRange, xRange), 0, Random.Range(-zRange, zRange));
@@ -21,15 +38,11 @@ public class MapSpawner : MonoBehaviour
 
     public void SpawnAllFood()
     {
-        for(int i = 0; i < numberOfFood; i++)
-        {
-            SpawnFood();
-        }
+       
     }
     // Start is called before the first frame update
     void Start()
     {
-        SpawnAllFood();
     }
 
     // Update is called once per frame
