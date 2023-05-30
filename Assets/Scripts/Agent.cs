@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
+    public float survivalTime = 0f;
+
     public float hungerRate;
     public NeuralNet net;
 
@@ -202,6 +204,8 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        survivalTime += Time.deltaTime;
+
         int closeAgents = GetCloseAgents();
         float finalHungerRate = hungerRate;
         if (closeAgents == 3)
@@ -229,7 +233,7 @@ public class Agent : MonoBehaviour
         meshRenderer.material.color = new Color(health/100f, health/100f, health/100f);
         if(health < 0f)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         bool reachedXBound = transform.position.x < -bounds || transform.position.x > bounds;

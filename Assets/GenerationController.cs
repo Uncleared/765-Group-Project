@@ -6,6 +6,7 @@ using TMPro;
 
 public class GenerationController : MonoBehaviour
 {
+    public float bounds = 30f;
     public int populationSize = 50;
     public GameObject creaturePrefab;
     public List<GameObject> population;
@@ -14,7 +15,6 @@ public class GenerationController : MonoBehaviour
 
     public TextMeshProUGUI generationText;
     private int currentGeneration = 1;
-    public TextMeshProUGUI timeText;
     private float lifetimeLeft;
 
     // Start is called before the first frame update
@@ -38,7 +38,6 @@ public class GenerationController : MonoBehaviour
 
         // Perform a countdown, showing the lifetime of the current population, reset on breeding
         lifetimeLeft -= Time.deltaTime;
-        timeText.text = "Time " + (lifetimeLeft).ToString("0");
     }
 
     /**
@@ -49,18 +48,12 @@ public class GenerationController : MonoBehaviour
         for (int i = 0; i < populationSize; i++)
         {
             // Choose a random position for the creature to appear
-            Vector2 pos = new Vector2(Random.Range(-9, 9), Random.Range(-4.5f, 4.5f));
+            Vector3 pos = new Vector3(Random.Range(-bounds, bounds), 0f, Random.Range(-bounds, bounds));
 
             // Instantiate a new creature
             GameObject creature = Instantiate(creaturePrefab, pos, Quaternion.identity);
-
-            // Set the colour of the creature
-            DNA creatureDNA = creature.GetComponent<DNA>();
-            creatureDNA.r = Random.Range(0.0f, 1.0f);
-            creatureDNA.g = Random.Range(0.0f, 1.0f);
-            creatureDNA.b = Random.Range(0.0f, 1.0f);
-
-            creature.GetComponent<MeshRenderer>().material.color = new Color(creatureDNA.r, creatureDNA.g, creatureDNA.b);
+            Agent agent = creature.GetComponent<Agent>();
+            agent.bounds = bounds;
 
             // Add the creature to the population
             population.Add(creature);
@@ -71,8 +64,8 @@ public class GenerationController : MonoBehaviour
     {
         List<GameObject> newPopulation = new List<GameObject>();
 
-        // Remove unfit individuals, by sorting the list by the most red creatures first
-        List<GameObject> sortedList = population.OrderByDescending(o => o.GetComponent<DNA>().r).ToList();
+        // Remove unfit individuals, by sorting the list by the longest surviving creatures
+        List<GameObject> sortedList = population.OrderByDescending(o => o.GetComponent<Agent>().survivalTime).ToList();
 
         population.Clear();
 
@@ -99,15 +92,17 @@ public class GenerationController : MonoBehaviour
     // Breeds a new creature using the DNA of the two parents
     private GameObject Breed(GameObject parent1, GameObject parent2)
     {
-        Vector2 pos = new Vector2(Random.Range(-9, 9), Random.Range(-4.5f, 4.5f));
+        Vector3 pos = new Vector3(Random.Range(-bounds, bounds), 0f, Random.Range(-bounds, bounds));
 
         // Create a new creature and get a reference to its DNA
         GameObject offspring = Instantiate(creaturePrefab, pos, Quaternion.identity);
-        DNA offspringDNA = offspring.GetComponent<DNA>();
+        Agent offspringDNA = offspring.GetComponent<Agent>();
 
         // Get the parents DNA
-        DNA dna1 = parent1.GetComponent<DNA>();
-        DNA dna2 = parent2.GetComponent<DNA>();
+        Agent dna1 = parent1.GetComponent<Agent>();
+        Agent dna2 = parent2.GetComponent<Agent>();
+
+        // MIX the two neural nets together
 
         // Get a mix of the parents DNA majority of the time, dependant on mutation chance
         if (mutationRate <= Random.Range(0, 100))
@@ -140,7 +135,8 @@ public class GenerationController : MonoBehaviour
             }
         }
 
-        offspring.GetComponent<MeshRenderer>().material.color = new Color(offspringDNA.r, offspringDNA.g, offspringDNA.b);
+        // Assign the breeded neural net
+        offspring.GetComponent<Agent>().material.color = new Color(offspringDNA.r, offspringDNA.g, offspringDNA.b);
 
         return offspring;
     }
