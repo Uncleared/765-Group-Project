@@ -28,6 +28,8 @@ public class Agent : MonoBehaviour
     public float foodDot = 0f;
     public float proximityDistance = 12f;
 
+    public float coooperativeTime;
+
     Vector3 velocity;
 
     MeshRenderer meshRenderer;
@@ -269,10 +271,10 @@ public class Agent : MonoBehaviour
         //    finalHungerRate *= 2f;
         //}
 
-        //if(closeAgents > 0f)
-        //{
-        //    finalHungerRate = 0f;
-        //}
+        if (closeAgents > 0f)
+        {
+            coooperativeTime += Time.deltaTime;
+        }
         // Check if close enough to agent
         // If so, then hunger rate depletes slower
         health -= Time.deltaTime * finalHungerRate;

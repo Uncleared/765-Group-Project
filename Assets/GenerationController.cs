@@ -39,6 +39,21 @@ public class GenerationController : MonoBehaviour
 
         // Set the value so we can show a countdown for each population
         lifetimeLeft = populationLifetime;
+
+        var folder = Application.streamingAssetsPath;
+
+        if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+
+
+        var filePath = Path.Combine(folder, "generationData.csv");
+
+        using (var writer = new StreamWriter(filePath, true))
+        {
+            writer.Write("\nGeneration,Max Survival Time,Cooperation Time of Max Survivor,Survival Time Most Cooperative, Max Cooperative Time");
+            // Longest survival/find cooperation
+            // Longest cooperation/find survival time
+        }
+
     }
 
     // Update is called once per frame
@@ -90,6 +105,7 @@ public class GenerationController : MonoBehaviour
 
         // Remove unfit individuals, by sorting the list by the longest surviving creatures
         List<GameObject> sortedList = population.OrderByDescending(o => o.GetComponent<Agent>().survivalTime).ToList();
+        List<GameObject> sortedByCooperationList = population.OrderByDescending(o => o.GetComponent<Agent>().coooperativeTime).ToList();
 
         // Write to spreadsheet
         // The target file path e.g.
@@ -102,7 +118,9 @@ public class GenerationController : MonoBehaviour
 
         using (var writer = new StreamWriter(filePath, true))
         {
-            writer.Write("\n" + currentGeneration + "," + sortedList[0].GetComponent<Agent>().survivalTime);
+            writer.Write("\n" + currentGeneration + "," + sortedList[0].GetComponent<Agent>().survivalTime + "," + sortedList[0].GetComponent<Agent>().coooperativeTime + "," + sortedByCooperationList[0].GetComponent<Agent>().survivalTime + "," + sortedByCooperationList[0].GetComponent<Agent>().coooperativeTime);
+            // Longest survival/find cooperation
+            // Longest cooperation/find survival time
         }
         print(filePath);
 
