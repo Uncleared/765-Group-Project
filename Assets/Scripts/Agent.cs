@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
+    public GameObject eatParticlePrefab;
+
     public GenerationController controller;
 
     public float survivalTime = 0f;
@@ -24,7 +26,7 @@ public class Agent : MonoBehaviour
     public float health = 100f;
 
     public float foodDot = 0f;
-    public float agentRequiredDistance = 5f;
+    public float proximityDistance = 12f;
 
     Vector3 velocity;
 
@@ -67,6 +69,8 @@ public class Agent : MonoBehaviour
                     {
                         health = 100f;
                     }
+                    GameObject eatParticle = Instantiate(eatParticlePrefab, transform.position, transform.rotation);
+                    Destroy(eatParticle, 2f);
                     Destroy(hitCollider.gameObject);
                 }
                 if (Vector3.Dot(delta.normalized, transform.forward) > 0f)
@@ -91,7 +95,7 @@ public class Agent : MonoBehaviour
     public int GetCloseAgents()
     {
         Vector3 foodDirection = Vector3.zero;
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, agentRequiredDistance, agentLayerMask);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, proximityDistance, agentLayerMask);
         List<Collider> colliderList = hitColliders.ToList();
 
         int count = 0;
@@ -104,7 +108,25 @@ public class Agent : MonoBehaviour
         });
         
         return count;
+    } 
+    
+    public int GetCloseFood()
+    {
+        Vector3 foodDirection = Vector3.zero;
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, proximityDistance, agentLayerMask);
+        List<Collider> colliderList = hitColliders.ToList();
+
+        int count = 0;
+        colliderList.ForEach(x =>
+        {
+            if(x.gameObject != gameObject)
+            {
+                count++;
+            }
+        });    
+        return count;
     }
+
 
     public Vector3 DetectAgentDirection()
     {
@@ -174,7 +196,7 @@ public class Agent : MonoBehaviour
         {
             followFood = true;
         }
-        net = new NeuralNet(3, 5, 1);
+        net = new NeuralNet(5, 5, 1);
         //DetectFood();
     }
 
@@ -182,9 +204,14 @@ public class Agent : MonoBehaviour
     {
         float foodValue = DetectFoodValue();
         float agentValue = DetectAgentValue();
-        double decision = net.Compute(foodValue, agentValue, health/10f)[0];
+        int closeAgents = GetCloseAgents();
+        int closeFood = GetCloseFood();
+        double decision = net.Compute(foodValue, agentValue, health/10f, closeAgents, closeFood)[0];
+
         Vector3 foodVelocity = DetectFoodDirection();
         Vector3 agentVelocity = DetectAgentDirection();
+
+
 
         bool seesFood = foodVelocity.magnitude > 0.05f;
         bool seesAgent = agentVelocity.magnitude > 0.05f;
@@ -211,6 +238,7 @@ public class Agent : MonoBehaviour
         survivalTime += Time.deltaTime;
 
         int closeAgents = GetCloseAgents();
+
         float finalHungerRate = hungerRate;
         if (closeAgents == 3)
         {
