@@ -49,7 +49,17 @@ public class GenerationController : MonoBehaviour
 
         using (var writer = new StreamWriter(filePath, true))
         {
-            writer.Write("\nGeneration,Max Survival Time,Cooperation Time of Max Survivor,Survival Time Most Cooperative, Max Cooperative Time");
+            writer.Write(
+                "\nGeneration,"+
+                "Max Survival Time,"+
+                "Cooperation Time of Max Survivor,"+
+                "Survival Time Most Cooperative, "+
+                "Max Cooperative Time, "+
+                "Average Survivor Cooperation Time, "+
+                "Average Dead Cooperation Time, "+
+                "Average Cooperator Survival Time, "+
+                "Average NonCooperator Survival Time"
+                );
             // Longest survival/find cooperation
             // Longest cooperation/find survival time
         }
@@ -118,7 +128,49 @@ public class GenerationController : MonoBehaviour
 
         using (var writer = new StreamWriter(filePath, true))
         {
-            writer.Write("\n" + currentGeneration + "," + sortedList[0].GetComponent<Agent>().survivalTime + "," + sortedList[0].GetComponent<Agent>().coooperativeTime + "," + sortedByCooperationList[0].GetComponent<Agent>().survivalTime + "," + sortedByCooperationList[0].GetComponent<Agent>().coooperativeTime);
+
+            // This pile only works for even population sizes
+            // Too lazy to fix it
+            int half = (int)populationSize / 2;
+
+            int averageSurvivor = 0;
+            int averageDead = 0;
+
+            foreach (var i in sortedList.Take(half)) {
+                averageSurvivor += (int)i.GetComponent<Agent>().coooperativeTime;
+            }
+            averageSurvivor = (int)averageSurvivor/2;
+
+            foreach (var i in sortedList.Skip(half).Take(half)) {
+                averageDead += (int)i.GetComponent<Agent>().coooperativeTime;
+            }
+            averageDead = (int)averageDead/2;
+
+            int averageCooperator = 0;
+            int averageDefector = 0;
+
+            foreach (var i in sortedByCooperationList.Take(half)) {
+                averageCooperator += (int)i.GetComponent<Agent>().survivalTime;
+            }
+            averageCooperator = (int)averageCooperator/2;
+
+            foreach (var i in sortedByCooperationList.Skip(half).Take(half)) {
+                averageDefector += (int)i.GetComponent<Agent>().survivalTime;
+            }
+            averageDefector = (int)averageDefector/2;
+
+            writer.Write(
+                "\n" + 
+                currentGeneration + "," + 
+                sortedList[0].GetComponent<Agent>().survivalTime + "," + 
+                sortedList[0].GetComponent<Agent>().coooperativeTime + "," + 
+                sortedByCooperationList[0].GetComponent<Agent>().survivalTime + "," + 
+                sortedByCooperationList[0].GetComponent<Agent>().coooperativeTime + "," + 
+                averageSurvivor + "," + 
+                averageDead + "," + 
+                averageCooperator + "," + 
+                averageDefector
+                );
             // Longest survival/find cooperation
             // Longest cooperation/find survival time
         }
