@@ -139,12 +139,12 @@ public class GenerationController : MonoBehaviour
             foreach (var i in sortedList.Take(half)) {
                 averageSurvivor += (int)i.GetComponent<Agent>().coooperativeTime;
             }
-            averageSurvivor = (int)averageSurvivor/2;
+            averageSurvivor = (int)averageSurvivor/half;
 
             foreach (var i in sortedList.Skip(half).Take(half)) {
                 averageDead += (int)i.GetComponent<Agent>().coooperativeTime;
             }
-            averageDead = (int)averageDead/2;
+            averageDead = (int)averageDead/half;
 
             int averageCooperator = 0;
             int averageDefector = 0;
@@ -152,12 +152,12 @@ public class GenerationController : MonoBehaviour
             foreach (var i in sortedByCooperationList.Take(half)) {
                 averageCooperator += (int)i.GetComponent<Agent>().survivalTime;
             }
-            averageCooperator = (int)averageCooperator/2;
+            averageCooperator = (int)averageCooperator/half;
 
             foreach (var i in sortedByCooperationList.Skip(half).Take(half)) {
                 averageDefector += (int)i.GetComponent<Agent>().survivalTime;
             }
-            averageDefector = (int)averageDefector/2;
+            averageDefector = (int)averageDefector/half;
 
             writer.Write(
                 "\n" + 
